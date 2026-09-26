@@ -1,0 +1,20 @@
+{
+  "branch": "flow-step-preemption-slo",
+  "base_commit": "902d0996214105e490365dc63ed09b02e6757a15",
+  "frozen_tag": "async-b1-adaptive-negative-v1",
+  "worktree": "/mnt/DuplexPilot/data/DuplexPilot/worktrees/flow-step-preemption-slo",
+  "host": "10.106.17.98",
+  "container": "duplexpilot",
+  "container_image": "triepilot-a100:20260720-ubuntu2404-lightweight",
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "python_environment": "conda:sglang",
+  "python_command": "/root/anaconda3/bin/conda run --no-capture-output -n sglang python",
+  "torch": "2.9.1+cu128",
+  "cuda_available": true,
+  "source_control": "RSV/DSV, APR checkpoint semantics, Token2Wav numerical implementation, model generation, and client protocol frozen",
+  "flow_execution": "synchronous B=1 only; B>1, async K=2, and residual-adaptive steps disabled",
+  "runtime_library_fix": "FFmpeg installed in sglang environment from configured domestic conda mirror after container restart; LD_LIBRARY_PATH includes sglang lib and torch lib",
+  "baseline_focused_tests": "27 passed",
+  "baseline_a100_equivalence": "3 passed after FFmpeg/TorchCodec runtime repair",
+  "disk_free_at_setup": "291G"
+}

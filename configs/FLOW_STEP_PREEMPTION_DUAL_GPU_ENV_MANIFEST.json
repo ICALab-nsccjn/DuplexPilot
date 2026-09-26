@@ -1,0 +1,83 @@
+{
+  "schema_version": "flow-step-preemption-dual-gpu-env-v1",
+  "branch": "flow-step-preemption-dual-gpu-slo",
+  "base_commit": "636e3832e5065516c782ca784efcc5dae5d6f0f5",
+  "frozen_single_gpu_evidence_tag": "flow-step-preemption-single-gpu-blocked-v1",
+  "container": {
+    "name": "duplexpilot",
+    "image": "triepilot-a100:20260720-ubuntu2404-lightweight",
+    "image_digest": "sha256:464c407c55b7cc95a13e1b81fc85aec52d35a5ccdf614de97f24c54119956808",
+    "python": "3.10.19",
+    "python_executable": "/root/anaconda3/envs/sglang/bin/python",
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "driver": "570.133.07",
+    "ffmpeg": "/root/anaconda3/envs/sglang/bin/ffmpeg",
+    "ffmpeg_version": "8.0.1",
+    "torchcodec": "/root/anaconda3/envs/sglang/lib/python3.10/site-packages/torchcodec",
+    "vllm_source_dir": "/mnt/DuplexPilot/data/DuplexPilot/worktrees/flow-step-preemption-dual-gpu-slo/third_party/vllm"
+  },
+  "hardware": {
+    "gpu_count": 2,
+    "gpu_model": "NVIDIA A100-SXM4-40GB",
+    "memory_mib_each": 40960,
+    "physical_mapping": {
+      "gpu0": "vLLM/model",
+      "gpu1": "Token2Wav/Flow"
+    }
+  },
+  "fixed_runtime_config": {
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "LYCHEEFD_REQUIRE_DUAL_GPU_PLACEMENT": "1",
+    "LYCHEEFD_TOKEN2WAV_DEVICE": "1",
+    "LYCHEEFD_VLLM_TENSOR_PARALLEL_SIZE": "1",
+    "LYCHEEFD_VLLM_PIPELINE_PARALLEL_SIZE": "1",
+    "LYCHEEFD_VLLM_GPU_MEMORY_UTILIZATION": "0.70",
+    "flow_batch_size": 1,
+    "async_flow": false,
+    "adaptive_steps": false,
+    "remote_token2wav": false
+  },
+  "required_gates": [
+    "torch.cuda.device_count == 2",
+    "vLLM/model loads on logical GPU0",
+    "Token2Wav/Flow loads on logical GPU1",
+    "hard shard-02 completes 3 independent runs",
+    "no OOM, ownership/state/stale-output errors",
+    "cleanup PASS"
+  ],
+  "verification": {
+    "placement_unit_tests": "PYTHONPATH=. pytest -q tests/test_dual_gpu_placement.py tests/test_dual_gpu_app_device.py tests/test_token2wav_device_selection.py tests/test_acoustic_lane_device_context.py",
+    "test_result_before_manifest_update": "16 passed",
+    "status": "DUAL_GPU_PLACEMENT_GATE_PASS",
+    "placement_service_port": 18082,
+    "placement_service_startups": 3,
+    "placement_service_startup_logs": [
+      "/mnt/DuplexPilot/data/DuplexPilot/results/flow_step_preemption_dual_gpu/placement_gate/server.log",
+      "/mnt/DuplexPilot/data/DuplexPilot/results/flow_step_preemption_dual_gpu/hard_shard02/r2/server.log",
+      "/mnt/DuplexPilot/data/DuplexPilot/results/flow_step_preemption_dual_gpu/hard_shard02/r3/server.log"
+    ],
+    "hard_shard_02": {
+      "runs": 3,
+      "valid_runs": 3,
+      "completed_sessions": "3/3",
+      "pcm_chunks": [9, 9, 9],
+      "ownership_errors": 0,
+      "oom_errors": 0,
+      "results": [
+        "/mnt/DuplexPilot/data/DuplexPilot/results/flow_step_preemption_dual_gpu/hard_shard02/r1/online_attempt.json",
+        "/mnt/DuplexPilot/data/DuplexPilot/results/flow_step_preemption_dual_gpu/hard_shard02/r2/online_attempt.json",
+        "/mnt/DuplexPilot/data/DuplexPilot/results/flow_step_preemption_dual_gpu/hard_shard02/r3/online_attempt.json"
+      ]
+    }
+  },
+  "runtime_dependency_hashes": {
+    "third_party/vllm/vllm/_C.abi3.so": "35566116acd4ba3d6ef8e0fbb711cb34be1b4a845e6291985e5b89e99bab58eb",
+    "third_party/vllm/vllm/_moe_C.abi3.so": "650e0be876661074b7a5216f21fb90bbd1539f22e21d57e5269c1c92eb57da99",
+    "third_party/vllm/vllm/vllm_flash_attn/vllm_flash_attn_c.abi3.so": "ce054b692341acea33f1aef258640c43419c6c3a14f9043c2c4f3c776f1cdf92"
+  },
+  "disk_check": {
+    "path": "/mnt/DuplexPilot",
+    "check_required_before_large_runs": true
+  }
+}
