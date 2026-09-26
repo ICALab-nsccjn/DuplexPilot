@@ -13,7 +13,7 @@ This release is organized for reviewer inspection and code-level reproduction. I
 - `src/checkpoint_lab/`: checkpoint adapters, state equivalence checks, and deterministic reference backends;
 - `src/third_party/`: the small set of project-specific vLLM and Step-Audio integration adapters;
 - `tests/`: checkpoint, runtime, ownership, model-plane, joint-execution, and integration contract tests;
-- `tools/`: analysis, profiling, and validation utilities that operate on user-supplied records;
+- `src/tools/`: analysis, profiling, and validation utilities that operate on user-supplied records;
 - `workloads/`: deterministic workload generators;
 - `configs/` and `docs/`: execution-envelope manifests and design/checkpoint contracts.
 
